@@ -2,7 +2,7 @@
 
 # Defaults
 browser='google-chrome-stable'
-user=$USER
+user="$USER"
 
 while [[ $# > 0 ]]; do
 	arg="$1"
@@ -12,14 +12,19 @@ while [[ $# > 0 ]]; do
 	eval "$arg"
 done
 
-# Forces
-[ -n "$@" ] && custom_args="$(printf '%q\n' "$@")"
+custom_args=''
+while [[ $# > 0 ]]; do
+	custom_args="$custom_args $(printf "%q" "$1")"
+	#custom_args="$custom_args '$1'"
+	shift
+done
 echo "Custom args: [ $custom_args ]"
-data_dir=$(dirname $0)
+
+data_dir=$(dirname "$0")
 
 # Start browser
 cd "$data_dir"
-nice -n 5 ionice -c 3 -t "$browser" \
+eval nice -n 5 ionice -c 3 -t "$browser" \
 \
 		`#: process mode settings :#` \
 	--no-default-browser-check \
